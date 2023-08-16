@@ -16,6 +16,9 @@ class Spede(Application):
     def __init__(self, app_ctx: ApplicationContext) -> None:
         super().__init__(app_ctx)
         self.last_calib = None
+        self.score = 0
+        self.size: int = 75
+        self.font: int = 5
         self.petals = [
             { "leds":[36, 5], "cap": 0 },
             { "leds":[4, 13], "cap": 2 },
@@ -26,11 +29,18 @@ class Spede(Application):
         self.petalid = 0
 
     def draw(self, ctx: Context) -> None:
+        ctx.save()
+        ctx.move_to(0, 0)
+        ctx.text_align = ctx.CENTER
+        ctx.text_baseline = ctx.MIDDLE
+        ctx.font_size = self.size
+        ctx.font = ctx.get_font_name(self.font)
         # Paint the background black
-        ctx.rgb(0, 0, 0).rectangle(-120, -120, 240, 240).fill()
-        ctx.rgb(255, 0, 0).round_rectangle(-20, -20, 40, 40, 20).fill()
-
+        ctx.rgb(250, 250, 250).rectangle(-120, -120, 240, 240).fill()
+        ctx.rgb(0,0,0).text(str(self.score))
+        ctx.restore()
         leds.set_all_rgb(0, 0, 0)
+
         for i, petal in enumerate(self.petals):
             if i == self.petalid:
                 if i != 0:
@@ -52,14 +62,19 @@ class Spede(Application):
         # make all of the petals work
         # wait for user input
         # if user input matches the lit petal, move forward
+        # input seems to sometimes take multiple presses at once, fix that
         for cap_index in range(10):
             petal = ins.captouch.petals[cap_index]
             if petal.pressed and cap_index == self.petals[self.petalid]["cap"]:
-                self.petalid = random.randint(0, 4)
-                print('jee')
+                # self.petalid = random.randint(0, 4)
+                self.petalid = random.choice([i for i in range(0,5) if i not in [self.petalid]])
+                self.score=self.score+1
+                # print('jee')
 
 
 # improvements
 # only wait input from the top petals
+# add countdown timer
+# make the leds change colors on every push
 
 st3m.run.run_view(Spede(ApplicationContext()))
