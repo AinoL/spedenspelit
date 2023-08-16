@@ -17,7 +17,7 @@ class Spede(Application):
         super().__init__(app_ctx)
         self.last_calib = None
         self.score = 0
-        self.size: int = 75
+        self.size: int = 60
         self.font: int = 5
         self.timelimit = 10000
         self.current_time = 0
@@ -32,7 +32,7 @@ class Spede(Application):
 
     def draw(self, ctx: Context) -> None:
         ctx.save()
-        ctx.move_to(0, 0)
+        ctx.move_to(0, -20)
         ctx.text_align = ctx.CENTER
         ctx.text_baseline = ctx.MIDDLE
         ctx.font_size = self.size
@@ -40,6 +40,8 @@ class Spede(Application):
         # Paint the background black
         ctx.rgb(250, 250, 250).rectangle(-120, -120, 240, 240).fill()
         ctx.rgb(0,0,0).text(str(self.score))
+        ctx.move_to(0, 20)
+        ctx.rgb(0,0,0).text(str((self.timelimit - self.current_time)/1000))
         ctx.restore()
         leds.set_all_rgb(0, 0, 0)
 
@@ -65,7 +67,8 @@ class Spede(Application):
         # wait for user input
         # if user input matches the lit petal, move forward
         # input seems to sometimes take multiple presses at once, fix that
-        self.current_time = self.current_time + delta_ms
+        if self.current_time < 10000:
+            self.current_time = self.current_time + delta_ms
         if(self.current_time < self.timelimit):
             for cap_index in range(10):
                 petal = ins.captouch.petals[cap_index]
@@ -79,7 +82,6 @@ class Spede(Application):
 
 # improvements
 # only wait input from the top petals
-# add countdown timer
 # make the leds change colors on every push
 
 st3m.run.run_view(Spede(ApplicationContext()))
