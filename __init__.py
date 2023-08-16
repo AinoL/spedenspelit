@@ -7,7 +7,6 @@ import random
 
 # put some play again stuff to score screen
 # if yes, make it loop back to the countdown screen
-# make a countdown screen
 # make a rules screen
 # make a splash screen
 # make a game screen
@@ -22,7 +21,6 @@ class GameView(Application, BaseView):
             self.size: int = 60
             self.font: int = 5
             self.timelimit = 10000
-            # self.timelimit = 2000
             self.current_time = 0
             self.petals = [
                 { "leds":[36, 5], "cap": 0 },
@@ -40,7 +38,6 @@ class GameView(Application, BaseView):
         ctx.text_baseline = ctx.MIDDLE
         ctx.font_size = self.size
         ctx.font = ctx.get_font_name(self.font)
-        # Paint the background white
         ctx.rgb(250, 250, 250).rectangle(-120, -120, 240, 240).fill()
         ctx.rgb(0,0,0).text(str(self.score))
         ctx.move_to(0, 20)
@@ -71,15 +68,12 @@ class GameView(Application, BaseView):
             for cap_index in range(10):
                 petal = ins.captouch.petals[cap_index]
                 if petal.pressed and cap_index == self.petals[self.petalid]["cap"]:
-                    # self.petalid = random.randint(0, 4)
                     self.petalid = random.choice([i for i in range(0,5) if i not in [self.petalid]])
                     self.score=self.score+1
         else:
             self.vm.push(ScoreView(ApplicationContext(), self.score))
 
     def on_enter(self, vm: Optional[ViewManager]) -> None:
-        # Remember to call super().on_enter() if you implement your own
-        # on_enter!
         super().on_enter(vm)
 
 class ScoreView(BaseView):
@@ -100,7 +94,6 @@ class ScoreView(BaseView):
         ctx.text_baseline = ctx.MIDDLE
         ctx.font_size = self.size
         ctx.font = ctx.get_font_name(self.font)
-        # Paint the background white
         ctx.rgb(250, 250, 250).rectangle(-120, -120, 240, 240).fill()
         ctx.rgb(0,0,0).text('Your score')
         ctx.move_to(0, 20)
@@ -109,8 +102,8 @@ class ScoreView(BaseView):
         leds.set_all_rgb(250, 170, 0)
         leds.update()
 
+# Make a clock go down from 3 seconds
 class CountdownView(BaseView):
-    # Make a clock go down from 3 seconds
     def __init__(self) -> None:
         super().__init__()
         self.timer = 4000
@@ -135,10 +128,46 @@ class CountdownView(BaseView):
         ctx.rgb(0,0,0).text(str(int((self.timer - self.current_time)/1000)%100))
         ctx.restore()
     
-    def think(self, ins: InputState, delta_ms: int) -> None:
+    def think(self, delta_ms: int) -> None:
         self.current_time = self.current_time + delta_ms
         if self.current_time > self.timer:
             self.vm.push(GameView(ApplicationContext()))
+
+# Make a rules screen
+class RulesView(BaseView):
+    def __init__(self) -> None:
+        super().__init__()
+        self.last_calib = None
+        self.size: int = 60
+        self.font: int = 5
+
+    def on_enter(self, vm: Optional[ViewManager]) -> None:
+        super().on_enter(vm)
+
+    def draw(self, ctx: Context) -> None:
+        ctx.rgb(250, 250, 250).rectangle(-120, -120, 240, 240).fill()
+        ctx.save()
+        ctx.move_to(0, -80)
+        ctx.text_align = ctx.CENTER
+        ctx.text_baseline = ctx.MIDDLE
+        ctx.font_size = self.size
+        ctx.font = ctx.get_font_name(self.font)
+        ctx.rgb(0,0,0).text('#TODO')
+        ctx.move_to(0, -50)
+        ctx.rgb(0,0,0).text('Press as')
+        ctx.move_to(0, -20)
+        ctx.rgb(0,0,0).text('many lit')
+        ctx.move_to(0, 10)
+        ctx.rgb(0,0,0).text('petals in ten')
+        ctx.move_to(0, 40)
+        ctx.rgb(0,0,0).text('seconds as')
+        ctx.move_to(0, 70)
+        ctx.rgb(0,0,0).text('you can')
+        ctx.restore()
+    
+    # def think(self, ins: InputState) -> None:
+    #     if self.input.buttons.app.left.pressed:
+    #         self.vm.push(CountdownView())
 
 class Spede(Application, BaseView):
     def draw(self, ctx: Context) -> None:
@@ -151,7 +180,7 @@ class Spede(Application, BaseView):
         super().think(ins, delta_ms) # Let BaseView do its thing
 
         if self.input.buttons.app.left.pressed:
-            self.vm.push(CountdownView())
+            self.vm.push(RulesView())
 
 
 # improvements
