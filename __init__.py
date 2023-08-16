@@ -123,15 +123,15 @@ class CountdownView(BaseView):
         super().on_enter(vm)
 
     def draw(self, ctx: Context) -> None:
+        ctx.rgb(250, 250, 250).rectangle(-120, -120, 240, 240).fill()
         ctx.save()
-        ctx.move_to(0, 0)
+        ctx.move_to(0, -20)
         ctx.text_align = ctx.CENTER
         ctx.text_baseline = ctx.MIDDLE
         ctx.font_size = self.size
         ctx.font = ctx.get_font_name(self.font)
-        # put the countdown timer here and show it
-        # Paint the background black
-        ctx.rgb(250, 250, 250).rectangle(-120, -120, 240, 240).fill()
+        ctx.rgb(0,0,0).text('Get ready!')
+        ctx.move_to(0, 20)
         ctx.rgb(0,0,0).text(str(int((self.timer - self.current_time)/1000)%100))
         ctx.restore()
     
