@@ -17,7 +17,7 @@ class ScoreView(BaseView):
     def __init__(self, app_ctx: ApplicationContext, score) -> None:
         super().__init__()
         self.score = score
-        # self.last_calib = None
+        self.last_calib = None
         self.size: int = 60
         self.font: int = 5
     
@@ -29,11 +29,16 @@ class ScoreView(BaseView):
         ctx.move_to(0, -20)
         ctx.text_align = ctx.CENTER
         ctx.text_baseline = ctx.MIDDLE
-        ctx.font_size: self.size
-        ctx.font: self.font
+        ctx.font_size = self.size
+        ctx.font = ctx.get_font_name(self.font)
         # Paint the background white
         ctx.rgb(250, 250, 250).rectangle(-120, -120, 240, 240).fill()
+        ctx.rgb(0,0,0).text('Your score')
+        ctx.move_to(0, 20)
         ctx.rgb(0,0,0).text(str(self.score))
+        ctx.restore()
+        leds.set_all_rgb(250, 170, 0)
+        leds.update()
 
 
 class Spede(Application, BaseView):
@@ -43,7 +48,8 @@ class Spede(Application, BaseView):
         self.score = 0
         self.size: int = 60
         self.font: int = 5
-        self.timelimit = 10000
+        # self.timelimit = 10000
+        self.timelimit = 2000
         self.current_time = 0
         self.petals = [
             { "leds":[36, 5], "cap": 0 },
