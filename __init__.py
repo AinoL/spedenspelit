@@ -13,6 +13,29 @@ import random
 # count down from ten seconds
 # when time is up, display score
 
+class ScoreView(BaseView):
+    def __init__(self, app_ctx: ApplicationContext, score) -> None:
+        super().__init__()
+        self.score = score
+        # self.last_calib = None
+        self.size: int = 60
+        self.font: int = 5
+    
+    def on_enter(self, vm: Optional[ViewManager]) -> None:
+        super().on_enter(vm)
+
+    def draw(self, ctx: Context) -> None:
+        ctx.save()
+        ctx.move_to(0, -20)
+        ctx.text_align = ctx.CENTER
+        ctx.text_baseline = ctx.MIDDLE
+        ctx.font_size: self.size
+        ctx.font: self.font
+        # Paint the background white
+        ctx.rgb(250, 250, 250).rectangle(-120, -120, 240, 240).fill()
+        ctx.rgb(0,0,0).text(str(self.score))
+
+
 class Spede(Application, BaseView):
     def __init__(self, app_ctx: ApplicationContext) -> None:
         super().__init__(app_ctx)
@@ -33,14 +56,12 @@ class Spede(Application, BaseView):
 
     def draw(self, ctx: Context) -> None:
         ctx.save()
-        ctx.move_to(0, -40)
-        ctx.rgb(0,0,0).text('score')
         ctx.move_to(0, -20)
         ctx.text_align = ctx.CENTER
         ctx.text_baseline = ctx.MIDDLE
         ctx.font_size = self.size
         ctx.font = ctx.get_font_name(self.font)
-        # Paint the background black
+        # Paint the background white
         ctx.rgb(250, 250, 250).rectangle(-120, -120, 240, 240).fill()
         ctx.rgb(0,0,0).text(str(self.score))
         ctx.move_to(0, 20)
@@ -80,7 +101,7 @@ class Spede(Application, BaseView):
                     self.petalid = random.choice([i for i in range(0,5) if i not in [self.petalid]])
                     self.score=self.score+1
         else:
-            print('game over')
+            self.vm.push(ScoreView(ApplicationContext(), self.score))
 
 
 # improvements
