@@ -21,8 +21,8 @@ class GameView(Application, BaseView):
             self.score = 0
             self.size: int = 60
             self.font: int = 5
-            # self.timelimit = 10000
-            self.timelimit = 2000
+            self.timelimit = 10000
+            # self.timelimit = 2000
             self.current_time = 0
             self.petals = [
                 { "leds":[36, 5], "cap": 0 },
@@ -44,7 +44,7 @@ class GameView(Application, BaseView):
         ctx.rgb(250, 250, 250).rectangle(-120, -120, 240, 240).fill()
         ctx.rgb(0,0,0).text(str(self.score))
         ctx.move_to(0, 20)
-        ctx.rgb(0,0,0).text(str((self.timelimit - self.current_time)/1000))
+        ctx.rgb(0,0,0).text(str(int((self.timelimit - self.current_time)/100)/10))
         ctx.restore()
         leds.set_all_rgb(0, 0, 0)
 
