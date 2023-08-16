@@ -1,5 +1,6 @@
 from st3m.reactor import Responder
 from st3m.application import Application, ApplicationContext
+from st3m.ui.view import BaseView
 import st3m.run
 import leds
 import random
@@ -12,7 +13,7 @@ import random
 # count down from ten seconds
 # when time is up, display score
 
-class Spede(Application):
+class Spede(Application, BaseView):
     def __init__(self, app_ctx: ApplicationContext) -> None:
         super().__init__(app_ctx)
         self.last_calib = None
@@ -32,6 +33,8 @@ class Spede(Application):
 
     def draw(self, ctx: Context) -> None:
         ctx.save()
+        ctx.move_to(0, -40)
+        ctx.rgb(0,0,0).text('score')
         ctx.move_to(0, -20)
         ctx.text_align = ctx.CENTER
         ctx.text_baseline = ctx.MIDDLE
