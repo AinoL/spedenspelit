@@ -109,6 +109,30 @@ class ScoreView(BaseView):
         leds.set_all_rgb(250, 170, 0)
         leds.update()
 
+class CountdownView(BaseView):
+    # Make a clock go down from 3 seconds
+    def __init__(self) -> None:
+        self.timer = 3000
+        self.current_time = 0
+        super().__init__()
+
+    def on_enter(self, vm: Optional[ViewManager]) -> None:
+        super().on_enter(vm)
+
+    def draw(self, ctx: Context) -> None:
+        # Paint the background black
+        ctx.rgb(0, 0, 0).rectangle(-120, -120, 240, 240).fill()
+        # Green square
+        ctx.rgb(0, 255, 0).rectangle(-20, -20, 40, 40).fill()
+    
+    def think(self, ins: InputState, delta_ms: int) -> None:
+        self.current_time = self.current_time + delta_ms
+        print(self.current_time)
+        if self.current_time > self.timer:
+            self.vm.push(GameView(ApplicationContext()))
+
+
+
 
 class Spede(Application, BaseView):
     def draw(self, ctx: Context) -> None:
@@ -121,7 +145,7 @@ class Spede(Application, BaseView):
         super().think(ins, delta_ms) # Let BaseView do its thing
 
         if self.input.buttons.app.left.pressed:
-            self.vm.push(GameView(ApplicationContext()))
+            self.vm.push(CountdownView())
 
 
 # improvements
