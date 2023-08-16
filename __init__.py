@@ -134,9 +134,9 @@ class CountdownView(BaseView):
             self.vm.push(GameView(ApplicationContext()))
 
 # Make a rules screen
-class RulesView(BaseView):
-    def __init__(self) -> None:
-        super().__init__()
+class RulesView(Application, BaseView):
+    def __init__(self, app_ctx: ApplicationContext) -> None:
+        super().__init__(app_ctx)
         self.last_calib = None
         self.size: int = 60
         self.font: int = 5
@@ -166,6 +166,7 @@ class RulesView(BaseView):
         ctx.restore()
     
     # def think(self, ins: InputState) -> None:
+    #     super().think(ins) # Let BaseView do its thing
     #     if self.input.buttons.app.left.pressed:
     #         self.vm.push(CountdownView())
 
@@ -178,9 +179,8 @@ class Spede(Application, BaseView):
 
     def think(self, ins: InputState, delta_ms: int) -> None:
         super().think(ins, delta_ms) # Let BaseView do its thing
-
         if self.input.buttons.app.left.pressed:
-            self.vm.push(RulesView())
+            self.vm.push(RulesView(ApplicationContext()))
 
 
 # improvements
