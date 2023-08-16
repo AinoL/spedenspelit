@@ -113,7 +113,7 @@ class CountdownView(BaseView):
     # Make a clock go down from 3 seconds
     def __init__(self) -> None:
         super().__init__()
-        self.timer = 3000
+        self.timer = 4000
         self.current_time = 0
         self.last_calib = None
         self.size: int = 60
@@ -132,7 +132,7 @@ class CountdownView(BaseView):
         # put the countdown timer here and show it
         # Paint the background black
         ctx.rgb(250, 250, 250).rectangle(-120, -120, 240, 240).fill()
-        ctx.rgb(0,0,0).text(str(int(self.timer - self.current_time)/1000))
+        ctx.rgb(0,0,0).text(str(int((self.timer - self.current_time)/1000)%100))
         ctx.restore()
     
     def think(self, ins: InputState, delta_ms: int) -> None:
