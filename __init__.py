@@ -112,27 +112,33 @@ class ScoreView(BaseView):
 class CountdownView(BaseView):
     # Make a clock go down from 3 seconds
     def __init__(self) -> None:
+        super().__init__()
         self.timer = 3000
         self.current_time = 0
-        super().__init__()
+        self.last_calib = None
+        self.size: int = 60
+        self.font: int = 5
 
     def on_enter(self, vm: Optional[ViewManager]) -> None:
         super().on_enter(vm)
 
     def draw(self, ctx: Context) -> None:
+        ctx.save()
+        ctx.move_to(0, 0)
+        ctx.text_align = ctx.CENTER
+        ctx.text_baseline = ctx.MIDDLE
+        ctx.font_size = self.size
+        ctx.font = ctx.get_font_name(self.font)
+        # put the countdown timer here and show it
         # Paint the background black
-        ctx.rgb(0, 0, 0).rectangle(-120, -120, 240, 240).fill()
-        # Green square
-        ctx.rgb(0, 255, 0).rectangle(-20, -20, 40, 40).fill()
+        ctx.rgb(250, 250, 250).rectangle(-120, -120, 240, 240).fill()
+        ctx.rgb(0,0,0).text(str(int(self.timer - self.current_time)/1000))
+        ctx.restore()
     
     def think(self, ins: InputState, delta_ms: int) -> None:
         self.current_time = self.current_time + delta_ms
-        print(self.current_time)
         if self.current_time > self.timer:
             self.vm.push(GameView(ApplicationContext()))
-
-
-
 
 class Spede(Application, BaseView):
     def draw(self, ctx: Context) -> None:
