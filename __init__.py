@@ -58,10 +58,15 @@ class GameView(BaseView):
             self.current_time = self.current_time + delta_ms
         if(self.current_time < self.timelimit):
             for cap_index in range(10):
-                petal = ins.captouch.petals[cap_index]
+                # petal = ins.captouch.petals[cap_index]
+                petal = self.input.captouch.petals[cap_index].whole
                 if petal.pressed and cap_index == self.petals[self.petalid]["cap"]:
                     self.score=self.score+1
                     self.petalid = random.choice([i for i in range(0,5) if i not in [self.petalid]])
+                elif petal.pressed and cap_index != self.petals[self.petalid]["cap"]:
+                    self.vm.push(ScoreView(self.score))
+
+
         else:
             self.vm.push(ScoreView(self.score))
 
