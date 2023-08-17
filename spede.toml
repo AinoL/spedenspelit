@@ -1,0 +1,29 @@
+[app]
+# The name of your app as displayed in the menu
+name = "Spedenspelit"
+
+# The submenu where your app should appear
+menu = "Games"
+
+[entry]
+# The name of your entry point `Application` class
+class = "Spede"
+
+[metadata]
+# Your nickname.  Must be at most 32 characters!
+author = "onja"
+
+# License of your app as an SPDX identifier: <https://spdx.org/licenses/>
+license = "MIT"
+
+# URL to the repository of your app.
+url = "https://github.com/AinoL/spedenspelit"
+
+# Description of your app.  Maximum 140 characters!
+description = "A speed game inspired by a legendary Finnish tv-show"
+
+# Version number of your app.  If you push a commit where this number is
+# increased, we interpret this as a new version being released.
+#
+# Version number must be an integer!
+version = 1

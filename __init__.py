@@ -181,6 +181,47 @@ class RulesView(Application, BaseView):
         if self.input.buttons.app.left.pressed:
             self.vm.push(CountdownView(ApplicationContext()))
 
+class SplashView(Application, BaseView):
+    def __init__(self, app_ctx: ApplicationContext) -> None:
+        super().__init__(app_ctx)
+        self.last_calib = None
+        self.size: int = 50
+        self.font: int = 5
+
+    def on_enter(self, vm: Optional[ViewManager]) -> None:
+        super().on_enter(vm)
+
+    def draw(self, ctx: Context) -> None:
+        ctx.rgb(250, 250, 250).rectangle(-120, -120, 240, 240).fill()
+        ctx.save()
+        ctx.move_to(0, -80)
+        ctx.text_align = ctx.CENTER
+        ctx.text_baseline = ctx.MIDDLE
+        ctx.font_size = self.size
+        ctx.font = ctx.get_font_name(self.font)
+        ctx.rgb(0,0,0).text('SPEDEN')
+        ctx.move_to(0, -50)
+        ctx.image(
+            "/flash/sys/apps/spedenspelit/spede_nelio.png",
+            -75,
+            -75,
+            150,
+            150
+        )
+        ctx.move_to(0, 80)
+        ctx.rgb(0,0,0).text('SPELIT')
+        ctx.move_to(0, 100)
+        ctx.font_size: int = 20
+        ctx.rgb(0,0,0).text('Press left to')
+        ctx.move_to(0, 110)
+        ctx.rgb(0,0,0).text('continue')
+        ctx.restore()
+    
+    def think(self, ins: InputState, delta_ms: int) -> None:
+        super().think(ins, delta_ms) # Let BaseView do its thing
+        if self.input.buttons.app.left.pressed:
+            self.vm.push(RulesView(ApplicationContext()))
+
 class Spede(Application, BaseView):
     def draw(self, ctx: Context) -> None:
         # Paint the background black
@@ -191,10 +232,11 @@ class Spede(Application, BaseView):
     def think(self, ins: InputState, delta_ms: int) -> None:
         super().think(ins, delta_ms) # Let BaseView do its thing
         if self.input.buttons.app.left.pressed:
-            self.vm.push(RulesView(ApplicationContext()))
+            self.vm.push(SplashView(ApplicationContext()))
 
 
 # improvements
 # make the leds change colors on every push
+# if wrong petal is pressed end the game
 
 st3m.run.run_view(Spede(ApplicationContext()))
