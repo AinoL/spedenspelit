@@ -101,7 +101,7 @@ class ScoreView(BaseView):
         # play again text
         ctx.move_to(0, 50)
         ctx.font_size = int = 20
-        ctx.rgb(0,0,0).text('Press left to play again')
+        ctx.rgb(0,0,0).text('Press right to play again')
 
         ctx.restore()
         leds.set_all_rgb(250, 170, 0)
@@ -109,7 +109,7 @@ class ScoreView(BaseView):
     
     def think(self, ins: InputState, delta_ms: int) -> None:
         super().think(ins, delta_ms) # Let BaseView do its thing
-        if self.input.buttons.app.left.pressed:
+        if self.input.buttons.app.right.pressed:
             self.vm.push(CountdownView(ApplicationContext()))
 
 # Make a clock go down from 3 seconds
@@ -178,7 +178,7 @@ class RulesView(Application, BaseView):
     
     def think(self, ins: InputState, delta_ms: int) -> None:
         super().think(ins, delta_ms) # Let BaseView do its thing
-        if self.input.buttons.app.left.pressed:
+        if self.input.buttons.app.right.pressed:
             self.vm.push(CountdownView(ApplicationContext()))
 
 class SplashView(Application, BaseView):
@@ -212,31 +212,31 @@ class SplashView(Application, BaseView):
         ctx.rgb(0,0,0).text('SPELIT')
         ctx.move_to(0, 100)
         ctx.font_size: int = 20
-        ctx.rgb(0,0,0).text('Press left to')
+        ctx.rgb(0,0,0).text('Press right to')
         ctx.move_to(0, 110)
         ctx.rgb(0,0,0).text('continue')
         ctx.restore()
     
     def think(self, ins: InputState, delta_ms: int) -> None:
         super().think(ins, delta_ms) # Let BaseView do its thing
-        if self.input.buttons.app.left.pressed:
+        if self.input.buttons.app.right.pressed:
             self.vm.push(RulesView(ApplicationContext()))
 
 class Spede(Application, BaseView):
     def draw(self, ctx: Context) -> None:
         # Paint the background black
         ctx.rgb(0, 0, 0).rectangle(-120, -120, 240, 240).fill()
-        # Red square
-        ctx.rgb(255, 0, 0).rectangle(-20, -20, 40, 40).fill()
 
     def think(self, ins: InputState, delta_ms: int) -> None:
         super().think(ins, delta_ms) # Let BaseView do its thing
-        if self.input.buttons.app.left.pressed:
-            self.vm.push(SplashView(ApplicationContext()))
+        self.vm.push(SplashView(ApplicationContext()))
 
 
 # improvements
 # make the leds change colors on every push
 # if wrong petal is pressed end the game
+# make a way to exit the game
+# add a high score file
+# switch right and right around
 
 st3m.run.run_view(Spede(ApplicationContext()))
