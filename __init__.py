@@ -5,14 +5,6 @@ import st3m.run
 import leds
 import random
 
-# put some play again stuff to score screen
-# if yes, make it loop back to the countdown screen
-# make a rules screen
-# make a splash screen
-# make a game screen
-# move stuff from spede to the game screen
-# make the toml file
-
 class GameView(Application, BaseView):
     def __init__(self, app_ctx: ApplicationContext) -> None:
             super().__init__(app_ctx)
@@ -68,8 +60,8 @@ class GameView(Application, BaseView):
             for cap_index in range(10):
                 petal = ins.captouch.petals[cap_index]
                 if petal.pressed and cap_index == self.petals[self.petalid]["cap"]:
-                    self.petalid = random.choice([i for i in range(0,5) if i not in [self.petalid]])
                     self.score=self.score+1
+                    self.petalid = random.choice([i for i in range(0,5) if i not in [self.petalid]])
         else:
             self.vm.push(ScoreView(ApplicationContext(), self.score))
 
@@ -224,7 +216,7 @@ class SplashView(Application, BaseView):
 
 class Spede(Application, BaseView):
     def draw(self, ctx: Context) -> None:
-        # Paint the background black
+        # Paint the background black because I don't know how to code
         ctx.rgb(0, 0, 0).rectangle(-120, -120, 240, 240).fill()
 
     def think(self, ins: InputState, delta_ms: int) -> None:
