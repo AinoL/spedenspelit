@@ -98,6 +98,11 @@ class ScoreView(BaseView):
         ctx.rgb(0,0,0).text('Your score')
         ctx.move_to(0, 20)
         ctx.rgb(0,0,0).text(str(self.score))
+        # play again text
+        ctx.move_to(0, 50)
+        ctx.font_size = int = 20
+        ctx.rgb(0,0,0).text('Press left to play again')
+
         ctx.restore()
         leds.set_all_rgb(250, 170, 0)
         leds.update()
