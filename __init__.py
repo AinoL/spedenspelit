@@ -103,9 +103,9 @@ class ScoreView(BaseView):
         leds.update()
 
 # Make a clock go down from 3 seconds
-class CountdownView(BaseView):
-    def __init__(self) -> None:
-        super().__init__()
+class CountdownView(Application, BaseView):
+    def __init__(self, app_ctx: ApplicationContext) -> None:
+        super().__init__(app_ctx)
         self.timer = 4000
         self.current_time = 0
         self.last_calib = None
@@ -128,7 +128,8 @@ class CountdownView(BaseView):
         ctx.rgb(0,0,0).text(str(int((self.timer - self.current_time)/1000)%100))
         ctx.restore()
     
-    def think(self, delta_ms: int) -> None:
+    def think(self, ins: InputState, delta_ms: int) -> None:
+        super().think(ins, delta_ms) # Let BaseView do its thing
         self.current_time = self.current_time + delta_ms
         if self.current_time > self.timer:
             self.vm.push(GameView(ApplicationContext()))
@@ -165,10 +166,10 @@ class RulesView(Application, BaseView):
         ctx.rgb(0,0,0).text('you can')
         ctx.restore()
     
-    # def think(self, ins: InputState) -> None:
-    #     super().think(ins) # Let BaseView do its thing
-    #     if self.input.buttons.app.left.pressed:
-    #         self.vm.push(CountdownView())
+    def think(self, ins: InputState, delta_ms: int) -> None:
+        super().think(ins, delta_ms) # Let BaseView do its thing
+        if self.input.buttons.app.left.pressed:
+            self.vm.push(CountdownView(ApplicationContext()))
 
 class Spede(Application, BaseView):
     def draw(self, ctx: Context) -> None:
