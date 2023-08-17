@@ -1,13 +1,13 @@
-from st3m.reactor import Responder
 from st3m.application import Application, ApplicationContext
 from st3m.ui.view import BaseView
 import st3m.run
 import leds
 import random
 
-class GameView(Application, BaseView):
-    def __init__(self, app_ctx: ApplicationContext) -> None:
-            super().__init__(app_ctx)
+# Actual game logic
+class GameView(BaseView):
+    def __init__(self) -> None:
+            super().__init__()
             self.last_calib = None
             self.score = 0
             self.size: int = 60
@@ -63,13 +63,14 @@ class GameView(Application, BaseView):
                     self.score=self.score+1
                     self.petalid = random.choice([i for i in range(0,5) if i not in [self.petalid]])
         else:
-            self.vm.push(ScoreView(ApplicationContext(), self.score))
+            self.vm.push(ScoreView(self.score))
 
     def on_enter(self, vm: Optional[ViewManager]) -> None:
         super().on_enter(vm)
 
+# Show the final score
 class ScoreView(BaseView):
-    def __init__(self, app_ctx: ApplicationContext, score) -> None:
+    def __init__(self, score) -> None:
         super().__init__()
         self.score = score
         self.last_calib = None
@@ -102,12 +103,12 @@ class ScoreView(BaseView):
     def think(self, ins: InputState, delta_ms: int) -> None:
         super().think(ins, delta_ms) # Let BaseView do its thing
         if self.input.buttons.app.right.pressed:
-            self.vm.push(CountdownView(ApplicationContext()))
+            self.vm.push(CountdownView())
 
 # Make a clock go down from 3 seconds
-class CountdownView(Application, BaseView):
-    def __init__(self, app_ctx: ApplicationContext) -> None:
-        super().__init__(app_ctx)
+class CountdownView(BaseView):
+    def __init__(self) -> None:
+        super().__init__()
         self.timer = 4000
         self.current_time = 0
         self.last_calib = None
@@ -134,12 +135,12 @@ class CountdownView(Application, BaseView):
         super().think(ins, delta_ms) # Let BaseView do its thing
         self.current_time = self.current_time + delta_ms
         if self.current_time > self.timer:
-            self.vm.push(GameView(ApplicationContext()))
+            self.vm.push(GameView())
 
-# Make a rules screen
-class RulesView(Application, BaseView):
-    def __init__(self, app_ctx: ApplicationContext) -> None:
-        super().__init__(app_ctx)
+# Show the game rules
+class RulesView(BaseView):
+    def __init__(self) -> None:
+        super().__init__()
         self.last_calib = None
         self.size: int = 60
         self.font: int = 5
@@ -171,11 +172,12 @@ class RulesView(Application, BaseView):
     def think(self, ins: InputState, delta_ms: int) -> None:
         super().think(ins, delta_ms) # Let BaseView do its thing
         if self.input.buttons.app.right.pressed:
-            self.vm.push(CountdownView(ApplicationContext()))
+            self.vm.push(CountdownView())
 
-class SplashView(Application, BaseView):
-    def __init__(self, app_ctx: ApplicationContext) -> None:
-        super().__init__(app_ctx)
+# the view with Spede
+class SplashView(BaseView):
+    def __init__(self) -> None:
+        super().__init__()
         self.last_calib = None
         self.size: int = 50
         self.font: int = 5
@@ -208,27 +210,29 @@ class SplashView(Application, BaseView):
         ctx.move_to(0, 110)
         ctx.rgb(0,0,0).text('continue')
         ctx.restore()
+        leds.set_all_rgb(250, 170, 0)
+        leds.update()
     
     def think(self, ins: InputState, delta_ms: int) -> None:
         super().think(ins, delta_ms) # Let BaseView do its thing
         if self.input.buttons.app.right.pressed:
-            self.vm.push(RulesView(ApplicationContext()))
+            self.vm.push(RulesView())
 
-class Spede(Application, BaseView):
+class Spede(Application):
+    def __init__(self, app_ctx: ApplicationContext) -> None:
+        super().__init__(app_ctx)
+
     def draw(self, ctx: Context) -> None:
         # Paint the background black because I don't know how to code
         ctx.rgb(0, 0, 0).rectangle(-120, -120, 240, 240).fill()
 
     def think(self, ins: InputState, delta_ms: int) -> None:
         super().think(ins, delta_ms) # Let BaseView do its thing
-        self.vm.push(SplashView(ApplicationContext()))
+        self.vm.push(SplashView())
 
 
 # improvements
-# make the leds change colors on every push
 # if wrong petal is pressed end the game
-# make a way to exit the game
 # add a high score file
-# switch right and right around
-
-st3m.run.run_view(Spede(ApplicationContext()))
+if __name__ == "__main__":
+    st3m.run.run_view(Spede(ApplicationContext()))

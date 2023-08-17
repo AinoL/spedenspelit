@@ -3,7 +3,7 @@
 name = "Spedenspelit"
 
 # The submenu where your app should appear
-menu = "Games"
+menu = "Apps"
 
 [entry]
 # The name of your entry point `Application` class
