@@ -101,6 +101,11 @@ class ScoreView(BaseView):
         ctx.restore()
         leds.set_all_rgb(250, 170, 0)
         leds.update()
+    
+    def think(self, ins: InputState, delta_ms: int) -> None:
+        super().think(ins, delta_ms) # Let BaseView do its thing
+        if self.input.buttons.app.left.pressed:
+            self.vm.push(CountdownView(ApplicationContext()))
 
 # Make a clock go down from 3 seconds
 class CountdownView(Application, BaseView):
